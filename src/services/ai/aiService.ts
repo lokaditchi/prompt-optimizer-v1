@@ -286,9 +286,9 @@ export async function optimizePrompt(
   const metaPrompt = `You are an expert AI Prompt Engineer. Your task is to analyze and deeply optimize a user's draft prompt for a Large Language Model.
 
 Your goal is to:
-1. Make the prompt highly specific, professional, and robust.
-2. Structure the prompt logically using Markdown (e.g., ## Task, ## Rules).
-3. If the user specifies particular topics or values that could be generalized, extract them into placeholders using the format {{placeholderName}}.
+1. EXHAUSTIVELY expand the user's idea. Make the new prompt MUCH LONGER, highly specific, extremely detailed, and robust.
+2. Structure the prompt logically using Markdown (e.g., ## Context, ## Task, ## Rules, ## Output Format).
+3. Think of every possible edge case, requirement, and constraint the LLM should know about and add them to the prompt.
 4. Separate the overarching persona/behavior into the "systemMessage" and the specific task into the "content".
 
 ### USER'S DRAFT PROMPT

@@ -1,0 +1,101 @@
+.simple-optimizer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  height: 100%;
+}
+
+.optimizer-header {
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.optimizer-header h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.optimizer-header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+}
+
+.optimizer-split {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+  min-height: 0;
+}
+
+@media (min-width: 768px) {
+  .optimizer-split {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+
+.optimizer-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-tertiary);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.pane-header h2 {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pane-textarea {
+  flex: 1;
+  width: 100%;
+  padding: var(--space-4);
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  resize: none;
+  min-height: 250px;
+}
+
+.pane-textarea:focus {
+  outline: none;
+}
+
+.pane-textarea.output-textarea {
+  color: var(--color-accent-cyan);
+}
+
+.optimizer-action-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) 0;
+}
+
+.optimize-btn {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-lg);
+  box-shadow: var(--shadow-glow-purple);
+}

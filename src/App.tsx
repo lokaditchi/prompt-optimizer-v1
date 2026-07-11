@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
-import { PromptComposer } from '@/components/prompt/PromptComposer'
+import { SimpleOptimizer } from '@/components/prompt/SimpleOptimizer'
 import { TemplateLibrary } from '@/components/templates/TemplateLibrary'
 import { TestRunner } from '@/components/testing/TestRunner'
 import { MetricsPanel } from '@/components/metrics/MetricsPanel'
@@ -20,7 +20,7 @@ export default function App() {
     <>
       <Routes>
         <Route element={<AppShell />}>
-          <Route index element={<PromptComposer />} />
+          <Route index element={<SimpleOptimizer />} />
           <Route path="templates" element={<TemplateLibrary />} />
           <Route path="test" element={<TestRunner />} />
           <Route path="metrics" element={<MetricsPanel />} />
