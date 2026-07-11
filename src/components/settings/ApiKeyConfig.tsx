@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import { Eye, EyeOff, Key, Server, Cpu, CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import { useSettingsStore } from '@/store/settingsStore'
 import { testConnection } from '@/services/ai/aiService'
+import { GEMINI_MODELS } from '@/lib/constants'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import './ApiKeyConfig.css'
 
 export function ApiKeyConfig() {
-  const { apiKey, setApiKey, baseUrl, setBaseUrl, defaultModel, setModel, availableModels } = useSettingsStore()
+  const { apiKey, setApiKey, baseUrl, setBaseUrl, defaultModel, setModel } = useSettingsStore()
   
   const [showKey, setShowKey] = useState(false)
   const [isTesting, setIsTesting] = useState(false)
@@ -84,7 +85,7 @@ export function ApiKeyConfig() {
                 value={defaultModel}
                 onChange={(e) => setModel(e.target.value)}
               >
-                {availableModels.map(model => (
+                {GEMINI_MODELS.map(model => (
                   <option key={model} value={model}>{model}</option>
                 ))}
               </select>

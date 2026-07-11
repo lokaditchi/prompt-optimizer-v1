@@ -18,8 +18,6 @@ interface SettingsState {
   defaultModel: string;
   /** UI color theme preference. */
   theme: 'dark' | 'light' | 'system';
-  /** List of available model identifiers. */
-  availableModels: string[];
 }
 
 interface SettingsActions {
@@ -43,7 +41,6 @@ export const useSettingsStore = create<SettingsStore>()(
       baseUrl: GEMINI_BASE_URL,
       defaultModel: 'gemini-3.0-flash',
       theme: 'system',
-      availableModels: [...GEMINI_MODELS],
 
       // ── Actions ────────────────────────────────────────────────────────
 
