@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Save, Play, Copy, MessageSquare, History, SlidersHorizontal, Plus, ChevronDown } from 'lucide-react'
+import { Save, Play, Copy, MessageSquare, History, SlidersHorizontal, Plus, ChevronDown, Wand2, Loader2 } from 'lucide-react'
 import { usePromptStore } from '@/store/promptStore'
+import { useSettingsStore } from '@/store/settingsStore'
+import { useUIStore } from '@/store/uiStore'
 import { detectPlaceholders } from '@/lib/placeholderEngine'
 import { copyToClipboard } from '@/lib/utils'
+import { optimizePrompt } from '@/services/ai/aiService'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Tooltip } from '@/components/ui/Tooltip'
@@ -31,6 +34,11 @@ export function PromptComposer() {
   const [showSystemMsg, setShowSystemMsg] = useState(false)
   const [promptName, setPromptName] = useState('')
   const [showRightPanel, setShowRightPanel] = useState(true)
+  const [isOptimizing, setIsOptimizing] = useState(false)
+
+  const apiKey = useSettingsStore(state => state.apiKey)
+  const defaultModel = useSettingsStore(state => state.defaultModel)
+  const addToast = useUIStore(state => state.addToast)
 
   // Sync with active version
   useEffect(() => {
@@ -71,6 +79,31 @@ export function PromptComposer() {
 
   const handleCopy = () => {
     copyToClipboard(content)
+  }
+
+  const handleOptimize = async () => {
+    if (!apiKey) {
+      addToast('Please configure your API key in Settings first', 'warning')
+      return
+    }
+    
+    setIsOptimizing(true)
+    try {
+      const result = await optimizePrompt(content, systemMessage, {
+        apiKey,
+        model: defaultModel,
+      })
+      setContent(result.content)
+      setSystemMessage(result.systemMessage)
+      if (result.systemMessage && !showSystemMsg) {
+        setShowSystemMsg(true)
+      }
+      addToast('Prompt optimized successfully! Review and save.', 'success')
+    } catch (err) {
+      addToast(err instanceof Error ? err.message : 'Optimization failed', 'error')
+    } finally {
+      setIsOptimizing(false)
+    }
   }
 
   const detectedPlaceholders = detectPlaceholders(content)
@@ -158,6 +191,14 @@ export function PromptComposer() {
           </div>
 
           <div className="composer-actions">
+            <Button 
+              variant="secondary" 
+              icon={isOptimizing ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
+              onClick={handleOptimize}
+              disabled={isOptimizing || !content.trim()}
+            >
+              {isOptimizing ? 'Optimizing...' : 'Optimize ✨'}
+            </Button>
             <Button 
               variant="primary" 
               icon={<Play size={16} />}

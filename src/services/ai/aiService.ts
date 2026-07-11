@@ -272,3 +272,77 @@ export async function testConnection(
     };
   }
 }
+
+/**
+ * Optimize an existing prompt using the AI.
+ * 
+ * Instructs Gemini to rewrite the prompt professionally, returning JSON.
+ */
+export async function optimizePrompt(
+  draftContent: string,
+  draftSystemMessage: string,
+  params: Omit<PromptParams, 'prompt' | 'systemMessage'>
+): Promise<{ systemMessage: string; content: string }> {
+  const metaPrompt = `You are an expert AI Prompt Engineer. Your task is to analyze and deeply optimize a user's draft prompt for a Large Language Model.
+
+Your goal is to:
+1. Make the prompt highly specific, professional, and robust.
+2. Structure the prompt logically using Markdown (e.g., ## Task, ## Rules).
+3. If the user specifies particular topics or values that could be generalized, extract them into placeholders using the format {{placeholderName}}.
+4. Separate the overarching persona/behavior into the "systemMessage" and the specific task into the "content".
+
+### USER'S DRAFT PROMPT
+System Message:
+${draftSystemMessage || "(None)"}
+
+Prompt Content:
+${draftContent || "(None)"}
+
+Please respond ONLY with a valid JSON object containing exactly two string keys: "systemMessage" and "content". Do not include markdown codeblocks around the JSON.`;
+
+  const baseUrl = GEMINI_BASE_URL;
+  const url = `${baseUrl}/models/${params.model}:generateContent?key=${params.apiKey}`;
+
+  const body = {
+    contents: [{ parts: [{ text: metaPrompt }] }],
+    generationConfig: {
+      temperature: params.temperature ?? 0.4,
+      maxOutputTokens: params.maxTokens ?? 2048,
+      topP: params.topP ?? 0.95,
+      responseMimeType: 'application/json',
+    },
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: params.signal,
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    let message = `Gemini API error (${response.status})`;
+    try {
+      const parsed = JSON.parse(errorBody);
+      message = parsed?.error?.message ?? message;
+    } catch {
+      // ignore
+    }
+    throw new Error(message);
+  }
+
+  const data = await response.json();
+  const candidates = data.candidates ?? [];
+  const text = candidates[0]?.content?.parts?.[0]?.text ?? '{}';
+
+  try {
+    const result = JSON.parse(text);
+    return {
+      systemMessage: result.systemMessage ?? '',
+      content: result.content ?? '',
+    };
+  } catch (err) {
+    throw new Error('Failed to parse optimization response from AI.');
+  }
+}
