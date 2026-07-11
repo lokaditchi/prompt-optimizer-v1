@@ -17,7 +17,7 @@ export const STORAGE_KEYS = {
 
 /** Default model generation parameters for new prompts. */
 export const DEFAULT_MODEL_PARAMS: ModelParameters = {
-  model: 'gemini-1.5-flash',
+  model: 'gemini-3.0-flash',
   temperature: 0.7,
   maxTokens: 2048,
   topP: 0.95,
@@ -30,7 +30,10 @@ export const GEMINI_MODELS = [
   'gemini-1.5-flash',
   'gemini-1.5-flash-8b',
   'gemini-1.5-pro',
-  'gemini-2.0-flash-exp'
+  'gemini-2.0-flash-exp',
+  'gemini-3.0-flash',
+  'gemini-3.0-flash-lite',
+  'gemini-3.0-pro'
 ] as const;
 
 export type GeminiModel = (typeof GEMINI_MODELS)[number];
@@ -59,6 +62,18 @@ export const MODEL_PRICING: Record<
   'gemini-2.0-flash-exp': {
     inputPerToken: 0.000_000_00, // Free during experimental phase
     outputPerToken: 0.000_000_00,
+  },
+  'gemini-3.0-flash': {
+    inputPerToken: 0.000_000_075,
+    outputPerToken: 0.000_000_3,
+  },
+  'gemini-3.0-flash-lite': {
+    inputPerToken: 0.000_000_0375,
+    outputPerToken: 0.000_000_15,
+  },
+  'gemini-3.0-pro': {
+    inputPerToken: 0.000_001_25,
+    outputPerToken: 0.000_005,
   }
 };
 
