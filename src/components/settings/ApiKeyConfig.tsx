@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff, Key, Server, Cpu, CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import { useSettingsStore } from '@/store/settingsStore'
-import { testConnection } from '@/services/ai/aiService'
-import { GEMINI_MODELS } from '@/lib/constants'
+import { testConnection, fetchAvailableModels } from '@/services/ai/aiService'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import './ApiKeyConfig.css'
 
 export function ApiKeyConfig() {
-  const { apiKey, setApiKey, baseUrl, setBaseUrl, defaultModel, setModel } = useSettingsStore()
+  const { apiKey, setApiKey, baseUrl, setBaseUrl, defaultModel, setModel, availableModels, setAvailableModels } = useSettingsStore()
   
   const [showKey, setShowKey] = useState(false)
   const [isTesting, setIsTesting] = useState(false)
@@ -26,7 +25,20 @@ export function ApiKeyConfig() {
     try {
       const result = await testConnection(apiKey, baseUrl)
       if (result.success) {
-        setTestResult({ success: true, message: 'Connection successful!' })
+        setTestResult({ success: true, message: 'Connection successful! Loading models...' })
+        
+        // Dynamically fetch models available for this specific API key
+        const models = await fetchAvailableModels(apiKey)
+        if (models.length > 0) {
+          setAvailableModels(models)
+          // If the current default model is not in the list, switch to the first available one
+          if (!models.includes(defaultModel)) {
+            setModel(models[0])
+          }
+          setTestResult({ success: true, message: `Found ${models.length} available models!` })
+        } else {
+          setTestResult({ success: true, message: 'Connected, but no compatible models found.' })
+        }
       } else {
         setTestResult({ success: false, message: result.error || 'Connection failed' })
       }
@@ -85,7 +97,7 @@ export function ApiKeyConfig() {
                 value={defaultModel}
                 onChange={(e) => setModel(e.target.value)}
               >
-                {GEMINI_MODELS.map(model => (
+                {availableModels.map(model => (
                   <option key={model} value={model}>{model}</option>
                 ))}
               </select>

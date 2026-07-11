@@ -274,6 +274,29 @@ export async function testConnection(
 }
 
 /**
+ * Fetch all available models for the given API key.
+ */
+export async function fetchAvailableModels(apiKey: string): Promise<string[]> {
+  try {
+    const url = `${GEMINI_BASE_URL}/models?key=${apiKey}`;
+    const response = await fetch(url);
+    if (!response.ok) return [];
+    
+    const data = await response.json();
+    if (!data.models) return [];
+    
+    // Filter for models that support text generation
+    const models = data.models
+      .filter((m: any) => m.supportedGenerationMethods?.includes('generateContent'))
+      .map((m: any) => m.name.replace('models/', ''));
+      
+    return models;
+  } catch (err) {
+    return [];
+  }
+}
+
+/**
  * Optimize an existing prompt using the AI.
  * 
  * Instructs Gemini to rewrite the prompt professionally, returning JSON.

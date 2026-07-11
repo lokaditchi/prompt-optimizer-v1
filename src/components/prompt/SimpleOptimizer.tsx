@@ -29,7 +29,7 @@ export function SimpleOptimizer() {
     try {
       const result = await optimizePrompt(draft, '', {
         apiKey,
-        model: 'gemini-3.0-flash', // Force 3.0 flash for new API accounts
+        model: defaultModel,
       })
       
       // Combine system message and content if both exist

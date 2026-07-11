@@ -18,6 +18,8 @@ interface SettingsState {
   defaultModel: string;
   /** UI color theme preference. */
   theme: 'dark' | 'light' | 'system';
+  /** Dynamically fetched available models */
+  availableModels: string[];
 }
 
 interface SettingsActions {
@@ -27,6 +29,8 @@ interface SettingsActions {
   setBaseUrl: (baseUrl: string) => void;
   /** Set the default model. */
   setModel: (model: string) => void;
+  /** Set available models */
+  setAvailableModels: (models: string[]) => void;
   /** Set the theme preference. */
   setTheme: (theme: 'dark' | 'light' | 'system') => void;
 }
@@ -41,12 +45,14 @@ export const useSettingsStore = create<SettingsStore>()(
       baseUrl: GEMINI_BASE_URL,
       defaultModel: 'gemini-3.0-flash',
       theme: 'system',
+      availableModels: [...GEMINI_MODELS],
 
       // ── Actions ────────────────────────────────────────────────────────
 
       setApiKey: (apiKey) => set({ apiKey }),
       setBaseUrl: (baseUrl) => set({ baseUrl }),
       setModel: (defaultModel) => set({ defaultModel }),
+      setAvailableModels: (availableModels) => set({ availableModels }),
       setTheme: (theme) => set({ theme }),
     }),
     {
