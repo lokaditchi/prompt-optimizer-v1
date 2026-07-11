@@ -29,7 +29,7 @@ export function SimpleOptimizer() {
     try {
       const result = await optimizePrompt(draft, '', {
         apiKey,
-        model: 'gemini-2.5-flash', // Force flash to bypass any cached 'pro' rate limit
+        model: 'gemini-3.0-flash', // Force 3.0 flash for new API accounts
       })
       
       // Combine system message and content if both exist
