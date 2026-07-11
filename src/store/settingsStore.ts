@@ -51,6 +51,10 @@ export const useSettingsStore = create<SettingsStore>()(
     }),
     {
       name: STORAGE_KEYS.SETTINGS,
+      partialize: (state) => ({
+        apiKey: state.apiKey,
+        theme: state.theme,
+      }),
     },
   ),
 );
