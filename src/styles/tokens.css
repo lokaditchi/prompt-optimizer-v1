@@ -1,0 +1,180 @@
+/* ==========================================================================
+   PromptForge — Design Tokens
+   All design decisions expressed as CSS custom properties.
+   Dark theme is the default; light theme activates via [data-theme="light"].
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Dark Theme (Default)
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* -- Colors: Backgrounds ------------------------------------------------ */
+  --color-bg-primary: hsl(225, 25%, 8%);
+  --color-bg-secondary: hsl(225, 20%, 12%);
+  --color-bg-tertiary: hsl(225, 18%, 16%);
+  --color-bg-elevated: hsl(225, 22%, 14%);
+  --color-bg-glass: hsla(225, 25%, 15%, 0.7);
+  --color-bg-input: hsl(225, 20%, 10%);
+  --color-bg-hover: hsla(225, 25%, 20%, 0.5);
+
+  /* -- Colors: Text ------------------------------------------------------- */
+  --color-text-primary: hsl(210, 25%, 95%);
+  --color-text-secondary: hsl(215, 15%, 70%);
+  --color-text-muted: hsl(215, 10%, 50%);
+  --color-text-inverse: hsl(225, 25%, 8%);
+
+  /* -- Colors: Accent — Cyan ---------------------------------------------- */
+  --color-accent-cyan: hsl(185, 85%, 55%);
+  --color-accent-cyan-hover: hsl(185, 85%, 65%);
+  --color-accent-cyan-muted: hsla(185, 85%, 55%, 0.15);
+
+  /* -- Colors: Accent — Purple -------------------------------------------- */
+  --color-accent-purple: hsl(265, 80%, 65%);
+  --color-accent-purple-hover: hsl(265, 80%, 75%);
+  --color-accent-purple-muted: hsla(265, 80%, 65%, 0.15);
+
+  /* -- Colors: Accent — Amber --------------------------------------------- */
+  --color-accent-amber: hsl(38, 92%, 60%);
+  --color-accent-amber-muted: hsla(38, 92%, 60%, 0.15);
+
+  /* -- Colors: Accent — Green --------------------------------------------- */
+  --color-accent-green: hsl(145, 65%, 52%);
+  --color-accent-green-muted: hsla(145, 65%, 52%, 0.15);
+
+  /* -- Colors: Accent — Red ----------------------------------------------- */
+  --color-accent-red: hsl(0, 75%, 60%);
+  --color-accent-red-muted: hsla(0, 75%, 60%, 0.15);
+
+  /* -- Colors: Borders ---------------------------------------------------- */
+  --color-border-primary: hsla(215, 15%, 40%, 0.3);
+  --color-border-secondary: hsla(215, 15%, 40%, 0.15);
+  --color-border-focus: var(--color-accent-cyan);
+
+  /* -- Spacing (4px base unit) -------------------------------------------- */
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0\.5: 2px;
+  --space-1: 4px;
+  --space-1\.5: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* -- Typography: Font Families ------------------------------------------ */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+
+  /* -- Typography: Font Sizes --------------------------------------------- */
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;    /* 18px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  --font-size-3xl: 2rem;       /* 32px */
+  --font-size-4xl: 2.5rem;     /* 40px */
+
+  /* -- Typography: Font Weights ------------------------------------------- */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* -- Typography: Line Heights ------------------------------------------- */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.75;
+
+  /* -- Border Radii ------------------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* -- Shadows (dark-optimized, deeper for dark backgrounds) -------------- */
+  --shadow-xs: 0 1px 2px hsla(0, 0%, 0%, 0.3);
+  --shadow-sm: 0 2px 8px hsla(0, 0%, 0%, 0.25);
+  --shadow-md: 0 4px 16px hsla(0, 0%, 0%, 0.3);
+  --shadow-lg: 0 8px 32px hsla(0, 0%, 0%, 0.35);
+  --shadow-xl: 0 16px 48px hsla(0, 0%, 0%, 0.4);
+
+  /* -- Shadows: Accent Glows ---------------------------------------------- */
+  --shadow-glow-cyan: 0 0 20px hsla(185, 85%, 55%, 0.3);
+  --shadow-glow-purple: 0 0 20px hsla(265, 80%, 65%, 0.3);
+  --shadow-glow-amber: 0 0 20px hsla(38, 92%, 60%, 0.3);
+
+  /* -- Transitions -------------------------------------------------------- */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* -- Z-Index Scale ------------------------------------------------------ */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+
+  /* -- Layout Constants --------------------------------------------------- */
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 68px;
+  --header-height: 60px;
+}
+
+/* --------------------------------------------------------------------------
+   Light Theme
+   Activated via <html data-theme="light"> or any ancestor element.
+   -------------------------------------------------------------------------- */
+
+[data-theme='light'] {
+  /* -- Colors: Backgrounds ------------------------------------------------ */
+  --color-bg-primary: hsl(220, 20%, 97%);
+  --color-bg-secondary: hsl(220, 18%, 93%);
+  --color-bg-tertiary: hsl(220, 15%, 89%);
+  --color-bg-elevated: hsl(0, 0%, 100%);
+  --color-bg-glass: hsla(220, 20%, 97%, 0.8);
+  --color-bg-input: hsl(0, 0%, 100%);
+  --color-bg-hover: hsla(220, 20%, 80%, 0.3);
+
+  /* -- Colors: Text ------------------------------------------------------- */
+  --color-text-primary: hsl(225, 25%, 12%);
+  --color-text-secondary: hsl(215, 15%, 40%);
+  --color-text-muted: hsl(215, 10%, 55%);
+  --color-text-inverse: hsl(210, 25%, 95%);
+
+  /* -- Colors: Accents (adjusted for light backgrounds) ------------------- */
+  --color-accent-cyan: hsl(185, 85%, 40%);
+  --color-accent-cyan-hover: hsl(185, 85%, 35%);
+  --color-accent-purple: hsl(265, 75%, 55%);
+  --color-accent-purple-hover: hsl(265, 75%, 50%);
+  --color-accent-green: hsl(145, 65%, 40%);
+  --color-accent-red: hsl(0, 75%, 50%);
+
+  /* -- Colors: Borders ---------------------------------------------------- */
+  --color-border-primary: hsla(215, 15%, 60%, 0.3);
+  --color-border-secondary: hsla(215, 15%, 60%, 0.15);
+
+  /* -- Shadows (light-optimized, softer and more diffuse) ----------------- */
+  --shadow-xs: 0 1px 2px hsla(220, 20%, 50%, 0.08);
+  --shadow-sm: 0 2px 8px hsla(220, 20%, 50%, 0.1);
+  --shadow-md: 0 4px 16px hsla(220, 20%, 50%, 0.12);
+  --shadow-lg: 0 8px 32px hsla(220, 20%, 50%, 0.14);
+  --shadow-xl: 0 16px 48px hsla(220, 20%, 50%, 0.16);
+
+  /* -- Shadows: Accent Glows (toned down for light) ----------------------- */
+  --shadow-glow-cyan: 0 0 20px hsla(185, 85%, 40%, 0.2);
+  --shadow-glow-purple: 0 0 20px hsla(265, 75%, 55%, 0.2);
+  --shadow-glow-amber: 0 0 20px hsla(38, 92%, 55%, 0.2);
+}

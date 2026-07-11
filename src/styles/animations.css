@@ -1,0 +1,262 @@
+/* ==========================================================================
+   PromptForge — Animations & Effects
+   Reusable keyframe animations, utility classes, and visual effects.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Keyframe Animations
+   -------------------------------------------------------------------------- */
+
+/* Fade */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Slide */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Scale */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Looping */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+
+/* Bounce */
+@keyframes bounceIn {
+  0%   { transform: scale(0.3); opacity: 0; }
+  50%  { transform: scale(1.05); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Typing / Typewriter */
+@keyframes typing {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* Expand height — useful for accordion / collapsible panels */
+@keyframes expandHeight {
+  from { opacity: 0; max-height: 0; }
+  to   { opacity: 1; max-height: 500px; }
+}
+
+/* Gentle floating — for decorative elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* --------------------------------------------------------------------------
+   2. Animation Utility Classes
+   -------------------------------------------------------------------------- */
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-base) ease-out;
+}
+
+.animate-fade-out {
+  animation: fadeOut var(--transition-base) ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp var(--transition-base) ease-out;
+}
+
+.animate-slide-down {
+  animation: slideDown var(--transition-base) ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight var(--transition-base) ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft var(--transition-base) ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--transition-base) ease-out;
+}
+
+.animate-bounce-in {
+  animation: bounceIn var(--transition-spring) ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   3. Staggered Animation Delays
+   Use on child elements for cascading entrance effects.
+   e.g. <div class="animate-slide-up stagger-1">
+   -------------------------------------------------------------------------- */
+
+.stagger-1 { animation-delay: 50ms; animation-fill-mode: both; }
+.stagger-2 { animation-delay: 100ms; animation-fill-mode: both; }
+.stagger-3 { animation-delay: 150ms; animation-fill-mode: both; }
+.stagger-4 { animation-delay: 200ms; animation-fill-mode: both; }
+.stagger-5 { animation-delay: 250ms; animation-fill-mode: both; }
+.stagger-6 { animation-delay: 300ms; animation-fill-mode: both; }
+.stagger-7 { animation-delay: 350ms; animation-fill-mode: both; }
+.stagger-8 { animation-delay: 400ms; animation-fill-mode: both; }
+
+/* --------------------------------------------------------------------------
+   4. Glassmorphism Effects
+   -------------------------------------------------------------------------- */
+
+.glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-primary);
+}
+
+.glass-strong {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-primary);
+}
+
+.glass-subtle {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   5. Shimmer & Skeleton Loading
+   -------------------------------------------------------------------------- */
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsla(0, 0%, 100%, 0.05),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton {
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton.shimmer {
+  background:
+    linear-gradient(
+      90deg,
+      var(--color-bg-tertiary),
+      var(--color-bg-hover),
+      var(--color-bg-tertiary)
+    );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Common skeleton shapes */
+.skeleton-text {
+  height: 1em;
+  margin-bottom: var(--space-2);
+}
+
+.skeleton-text:last-child {
+  width: 70%;
+}
+
+.skeleton-heading {
+  height: 1.5em;
+  width: 60%;
+  margin-bottom: var(--space-3);
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+}
+
+.skeleton-button {
+  height: 36px;
+  width: 100px;
+  border-radius: var(--radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   6. Light theme shimmer adjustment
+   -------------------------------------------------------------------------- */
+
+[data-theme='light'] .shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsla(0, 0%, 0%, 0.04),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+[data-theme='light'] .skeleton.shimmer {
+  background:
+    linear-gradient(
+      90deg,
+      var(--color-bg-tertiary),
+      var(--color-bg-secondary),
+      var(--color-bg-tertiary)
+    );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}

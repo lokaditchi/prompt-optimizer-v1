@@ -1,0 +1,258 @@
+/* ==========================================================================
+   PromptForge — Global Styles
+   Entry point that imports the design system and applies global defaults.
+   Import this single file in your app's root (e.g. main.tsx).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. External Fonts
+   -------------------------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* --------------------------------------------------------------------------
+   2. Design System Imports
+   -------------------------------------------------------------------------- */
+
+@import './reset.css';
+@import './tokens.css';
+@import './animations.css';
+
+/* --------------------------------------------------------------------------
+   3. Global Body Styling
+   -------------------------------------------------------------------------- */
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  line-height: var(--line-height-normal);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   4. Scrollbar Styling (Dark Mode)
+   -------------------------------------------------------------------------- */
+
+/* Webkit / Blink browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsla(185, 60%, 45%, 0.4);
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsla(185, 60%, 55%, 0.6);
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-bg-secondary);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsla(185, 60%, 45%, 0.4) var(--color-bg-secondary);
+}
+
+/* Light theme scrollbar overrides */
+[data-theme='light'] ::-webkit-scrollbar-track {
+  background: var(--color-bg-tertiary);
+}
+
+[data-theme='light'] ::-webkit-scrollbar-thumb {
+  background: hsla(215, 15%, 60%, 0.4);
+  background-clip: content-box;
+}
+
+[data-theme='light'] ::-webkit-scrollbar-thumb:hover {
+  background: hsla(215, 15%, 50%, 0.6);
+  background-clip: content-box;
+}
+
+[data-theme='light'] * {
+  scrollbar-color: hsla(215, 15%, 60%, 0.4) var(--color-bg-tertiary);
+}
+
+/* --------------------------------------------------------------------------
+   5. Screen Reader Only
+   -------------------------------------------------------------------------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:focus-within {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: initial;
+  margin: initial;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+}
+
+/* --------------------------------------------------------------------------
+   6. Global Utility Classes
+   -------------------------------------------------------------------------- */
+
+/* -- Text Utilities ------------------------------------------------------- */
+
+.text-primary   { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted     { color: var(--color-text-muted); }
+.text-cyan      { color: var(--color-accent-cyan); }
+.text-purple    { color: var(--color-accent-purple); }
+.text-amber     { color: var(--color-accent-amber); }
+.text-green     { color: var(--color-accent-green); }
+.text-red       { color: var(--color-accent-red); }
+
+.text-xs   { font-size: var(--font-size-xs); }
+.text-sm   { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg   { font-size: var(--font-size-lg); }
+.text-xl   { font-size: var(--font-size-xl); }
+.text-2xl  { font-size: var(--font-size-2xl); }
+.text-3xl  { font-size: var(--font-size-3xl); }
+.text-4xl  { font-size: var(--font-size-4xl); }
+
+.font-normal   { font-weight: var(--font-weight-normal); }
+.font-medium   { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold     { font-weight: var(--font-weight-bold); }
+.font-mono     { font-family: var(--font-mono); }
+
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+
+/* -- Truncation ----------------------------------------------------------- */
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* -- Layout Utilities ----------------------------------------------------- */
+
+.flex         { display: flex; }
+.flex-col     { display: flex; flex-direction: column; }
+.flex-center  { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-1       { flex: 1; }
+.flex-shrink-0 { flex-shrink: 0; }
+.gap-1  { gap: var(--space-1); }
+.gap-2  { gap: var(--space-2); }
+.gap-3  { gap: var(--space-3); }
+.gap-4  { gap: var(--space-4); }
+.gap-6  { gap: var(--space-6); }
+.gap-8  { gap: var(--space-8); }
+
+.grid { display: grid; }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+/* -- Visibility ----------------------------------------------------------- */
+
+.hidden    { display: none; }
+.invisible { visibility: hidden; }
+.opacity-0 { opacity: 0; }
+
+/* -- Interactive States --------------------------------------------------- */
+
+.cursor-pointer  { cursor: pointer; }
+.cursor-default  { cursor: default; }
+.pointer-events-none { pointer-events: none; }
+.select-none     { user-select: none; }
+
+/* -- Overflow ------------------------------------------------------------- */
+
+.overflow-hidden { overflow: hidden; }
+.overflow-auto   { overflow: auto; }
+.overflow-y-auto { overflow-y: auto; }
+.overflow-x-hidden { overflow-x: hidden; }
+
+/* -- Position ------------------------------------------------------------- */
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed    { position: fixed; }
+.sticky   { position: sticky; }
+.inset-0  { inset: 0; }
+
+/* -- Borders -------------------------------------------------------------- */
+
+.rounded-sm   { border-radius: var(--radius-sm); }
+.rounded-md   { border-radius: var(--radius-md); }
+.rounded-lg   { border-radius: var(--radius-lg); }
+.rounded-xl   { border-radius: var(--radius-xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* --------------------------------------------------------------------------
+   7. Responsive Breakpoint Helpers
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 767px) {
+  .hide-mobile { display: none !important; }
+}
+
+@media (min-width: 768px) {
+  .show-mobile-only { display: none !important; }
+}
+
+@media (max-width: 1023px) {
+  .hide-tablet { display: none !important; }
+}
+
+@media (min-width: 1024px) {
+  .show-tablet-only { display: none !important; }
+}

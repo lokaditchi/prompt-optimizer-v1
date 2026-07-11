@@ -1,0 +1,237 @@
+/* ==========================================================================
+   PromptForge — Modern CSS Reset
+   A comprehensive reset that provides a consistent baseline across browsers.
+   Uses design tokens from tokens.css for focus and selection styles.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Box Model & Margin Reset
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. Document & Root
+   -------------------------------------------------------------------------- */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  tab-size: 4;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   3. App Root
+   -------------------------------------------------------------------------- */
+
+#root {
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* --------------------------------------------------------------------------
+   4. Media Elements
+   -------------------------------------------------------------------------- */
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+picture,
+video {
+  height: auto;
+}
+
+/* --------------------------------------------------------------------------
+   5. Form Elements — Inherit Typography
+   -------------------------------------------------------------------------- */
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* --------------------------------------------------------------------------
+   6. Typography — Prevent Overflow
+   -------------------------------------------------------------------------- */
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------------------
+   7. Lists
+   -------------------------------------------------------------------------- */
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* --------------------------------------------------------------------------
+   8. Links
+   -------------------------------------------------------------------------- */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+   9. Tables
+   -------------------------------------------------------------------------- */
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* --------------------------------------------------------------------------
+   10. Focus Styles — Accessible & Beautiful
+   -------------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-cyan);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   11. Selection
+   -------------------------------------------------------------------------- */
+
+::selection {
+  background: var(--color-accent-purple);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--color-accent-purple);
+  color: white;
+}
+
+/* --------------------------------------------------------------------------
+   12. Misc Browser Normalization
+   -------------------------------------------------------------------------- */
+
+/* Remove default search input styling in WebKit */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
+
+/* Remove spinner for number inputs */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Prevent iOS zoom on input focus */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    font-size: max(1rem, 16px);
+  }
+}
+
+/* Dialog reset */
+dialog {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+dialog::backdrop {
+  background: hsla(0, 0%, 0%, 0.5);
+}
+
+/* Remove default summary marker */
+summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Reduced motion — respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
