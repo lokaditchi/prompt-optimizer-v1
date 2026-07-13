@@ -17,7 +17,7 @@ export const STORAGE_KEYS = {
 
 /** Default model generation parameters for new prompts. */
 export const DEFAULT_MODEL_PARAMS: ModelParameters = {
-  model: 'gemini-2.0-flash',
+  model: 'google/gemma-4-31b-it:free',
   temperature: 0.7,
   maxTokens: 2048,
   topP: 0.95,
@@ -27,6 +27,7 @@ export const DEFAULT_MODEL_PARAMS: ModelParameters = {
 
 /** Available Gemini model identifiers. */
 export const GEMINI_MODELS = [
+  'google/gemma-4-31b-it:free',
   'gemini-2.0-flash',
   'gemini-2.5-flash',
   'gemini-2.5-pro'
@@ -43,6 +44,10 @@ export const MODEL_PRICING: Record<
   string,
   { inputPerToken: number; outputPerToken: number }
 > = {
+  'google/gemma-4-31b-it:free': {
+    inputPerToken: 0,
+    outputPerToken: 0,
+  },
   'gemini-2.0-flash': {
     inputPerToken: 0.000_000_075,
     outputPerToken: 0.000_000_3,

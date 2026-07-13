@@ -200,33 +200,66 @@ export async function* sendPromptStreaming(
 export async function sendPrompt(
   params: PromptParams,
 ): Promise<AIServiceResponse> {
-  const baseUrl = GEMINI_BASE_URL;
-  const url = `${baseUrl}/models/${params.model}:generateContent?key=${params.apiKey}`;
+  const isOpenRouter = params.model.includes('/');
+  
+  const url = isOpenRouter 
+    ? 'https://openrouter.ai/api/v1/chat/completions'
+    : `${GEMINI_BASE_URL}/models/${params.model}:generateContent?key=${params.apiKey}`;
+
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (isOpenRouter) {
+    headers['Authorization'] = `Bearer ${params.apiKey}`;
+  }
+
+  const body = isOpenRouter 
+    ? {
+        model: params.model,
+        messages: [
+          ...(params.systemMessage ? [{ role: 'system', content: params.systemMessage }] : []),
+          { role: 'user', content: params.prompt }
+        ],
+        temperature: params.temperature ?? 0.7,
+        max_tokens: params.maxTokens ?? 2048,
+        top_p: params.topP ?? 0.95,
+      }
+    : buildRequestBody(params);
 
   const response = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(buildRequestBody(params)),
+    headers,
+    body: JSON.stringify(body),
     signal: params.signal,
   });
 
   if (!response.ok) {
     const errorBody = await response.text();
-    let message = `Gemini API error (${response.status})`;
+    let message = `API error (${response.status})`;
     try {
       const parsed = JSON.parse(errorBody);
       message = parsed?.error?.message ?? message;
     } catch {
-      // Use the status-based message
+      // ignore
     }
     throw new Error(message);
   }
 
   const data = await response.json();
-  const candidates = data.candidates ?? [];
-  const content =
-    candidates[0]?.content?.parts?.[0]?.text ?? '';
+  
+  if (isOpenRouter) {
+    const content = data.choices?.[0]?.message?.content ?? '';
+    const promptTokens = data.usage?.prompt_tokens ?? 0;
+    const completionTokens = data.usage?.completion_tokens ?? 0;
+    return {
+      content,
+      promptTokens,
+      completionTokens,
+      totalTokens: promptTokens + completionTokens,
+      model: params.model,
+    };
+  }
 
+  const candidates = data.candidates ?? [];
+  const content = candidates[0]?.content?.parts?.[0]?.text ?? '';
   const usageMetadata = data.usageMetadata ?? {};
   const promptTokens = usageMetadata.promptTokenCount ?? 0;
   const completionTokens = usageMetadata.candidatesTokenCount ?? 0;
@@ -323,29 +356,46 @@ ${draftContent || "(None)"}
 
 Please respond ONLY with a valid JSON object containing exactly two string keys: "systemMessage" and "content". Do not include markdown codeblocks around the JSON.`;
 
-  const baseUrl = GEMINI_BASE_URL;
-  const url = `${baseUrl}/models/${params.model}:generateContent?key=${params.apiKey}`;
+  const isOpenRouter = params.model.includes('/');
+  
+  const url = isOpenRouter
+    ? 'https://openrouter.ai/api/v1/chat/completions'
+    : `${GEMINI_BASE_URL}/models/${params.model}:generateContent?key=${params.apiKey}`;
 
-  const body = {
-    contents: [{ parts: [{ text: metaPrompt }] }],
-    generationConfig: {
-      temperature: params.temperature ?? 0.4,
-      maxOutputTokens: params.maxTokens ?? 2048,
-      topP: params.topP ?? 0.95,
-      responseMimeType: 'application/json',
-    },
-  };
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (isOpenRouter) {
+    headers['Authorization'] = `Bearer ${params.apiKey}`;
+  }
+
+  const body = isOpenRouter
+    ? {
+        model: params.model,
+        messages: [{ role: 'user', content: metaPrompt }],
+        temperature: params.temperature ?? 0.4,
+        max_tokens: params.maxTokens ?? 2048,
+        top_p: params.topP ?? 0.95,
+        response_format: { type: 'json_object' }
+      }
+    : {
+        contents: [{ parts: [{ text: metaPrompt }] }],
+        generationConfig: {
+          temperature: params.temperature ?? 0.4,
+          maxOutputTokens: params.maxTokens ?? 2048,
+          topP: params.topP ?? 0.95,
+          responseMimeType: 'application/json',
+        },
+      };
 
   const response = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(body),
     signal: params.signal,
   });
 
   if (!response.ok) {
     const errorBody = await response.text();
-    let message = `Gemini API error (${response.status})`;
+    let message = `API error (${response.status})`;
     try {
       const parsed = JSON.parse(errorBody);
       message = parsed?.error?.message ?? message;
@@ -356,8 +406,14 @@ Please respond ONLY with a valid JSON object containing exactly two string keys:
   }
 
   const data = await response.json();
-  const candidates = data.candidates ?? [];
-  const text = candidates[0]?.content?.parts?.[0]?.text ?? '{}';
+  
+  let text = '{}';
+  if (isOpenRouter) {
+    text = data.choices?.[0]?.message?.content ?? '{}';
+  } else {
+    const candidates = data.candidates ?? [];
+    text = candidates[0]?.content?.parts?.[0]?.text ?? '{}';
+  }
 
   try {
     const result = JSON.parse(text);
