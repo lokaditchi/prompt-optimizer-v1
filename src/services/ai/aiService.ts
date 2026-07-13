@@ -6,6 +6,7 @@
  */
 
 import { GEMINI_BASE_URL } from '@/lib/constants';
+import { ModelRegistry } from '@/services/models/modelRegistry';
 
 /** Structured response from the AI service. */
 export interface AIServiceResponse {
@@ -200,7 +201,7 @@ export async function* sendPromptStreaming(
 export async function sendPrompt(
   params: PromptParams,
 ): Promise<AIServiceResponse> {
-  const isOpenRouter = params.model.includes('/');
+  const isOpenRouter = ModelRegistry.isOpenRouter(params.model);
   
   const url = isOpenRouter 
     ? 'https://openrouter.ai/api/v1/chat/completions'
@@ -233,10 +234,12 @@ export async function sendPrompt(
 
   if (!response.ok) {
     const errorBody = await response.text();
-    let message = `API error (${response.status})`;
+    let message = `API request failed with status ${response.status}`;
     try {
       const parsed = JSON.parse(errorBody);
-      message = parsed?.error?.message ?? message;
+      message = parsed?.error?.message 
+        ? parsed.error.message.replace(params.apiKey, '***HIDDEN***') 
+        : message;
     } catch {
       // ignore
     }
@@ -290,7 +293,7 @@ export async function testConnection(
       let message = `API error (${response.status})`;
       try {
         const parsed = JSON.parse(errorBody);
-        message = parsed?.error?.message ?? message;
+        message = parsed?.error?.message ? parsed.error.message.replace(apiKey, '***HIDDEN***') : message;
       } catch {
         // Use status-based message
       }
@@ -356,7 +359,7 @@ ${draftContent || "(None)"}
 
 Please respond ONLY with a valid JSON object containing exactly two string keys: "systemMessage" and "content". Do not include markdown codeblocks around the JSON.`;
 
-  const isOpenRouter = params.model.includes('/');
+  const isOpenRouter = ModelRegistry.isOpenRouter(params.model);
   
   const url = isOpenRouter
     ? 'https://openrouter.ai/api/v1/chat/completions'
@@ -398,7 +401,7 @@ Please respond ONLY with a valid JSON object containing exactly two string keys:
     let message = `API error (${response.status})`;
     try {
       const parsed = JSON.parse(errorBody);
-      message = parsed?.error?.message ?? message;
+      message = parsed?.error?.message ? parsed.error.message.replace(params.apiKey, '***HIDDEN***') : message;
     } catch {
       // ignore
     }
