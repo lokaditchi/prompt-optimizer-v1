@@ -43,7 +43,7 @@ export const useSettingsStore = create<SettingsStore>()(
       // ── State ──────────────────────────────────────────────────────────
       apiKey: '',
       baseUrl: GEMINI_BASE_URL,
-      defaultModel: 'gemini-3.0-flash',
+      defaultModel: 'gemini-2.0-flash',
       theme: 'system',
       availableModels: [...GEMINI_MODELS],
 
@@ -60,6 +60,11 @@ export const useSettingsStore = create<SettingsStore>()(
       partialize: (state) => ({
         apiKey: state.apiKey,
         theme: state.theme,
+      }),
+      merge: (persistedState: any, currentState) => ({
+        ...currentState,
+        apiKey: persistedState?.apiKey ?? currentState.apiKey,
+        theme: persistedState?.theme ?? currentState.theme,
       }),
     },
   ),
