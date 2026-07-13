@@ -27,11 +27,6 @@ const modelParametersSchema = z.object({
 
 // ── Prompt & Version schemas ────────────────────────────────────────────
 
-const sanitizedString = z.preprocess((val) => {
-  if (typeof val !== 'string') return val;
-  return sanitizeHtml(val);
-}, z.string());
-
 export const versionSchema = z.object({
   id: z.string().min(1),
   promptId: z.string().min(1),
@@ -40,16 +35,16 @@ export const versionSchema = z.object({
   systemMessage: z.string(),
   placeholders: z.array(placeholderSchema),
   parameters: modelParametersSchema,
-  changeNote: sanitizedString,
+  changeNote: z.string(),
   createdAt: z.string().datetime({ offset: true }).or(z.string().datetime()),
 });
 
 export const promptSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1, 'Prompt name is required'),
-  description: sanitizedString,
+  description: z.string(),
   currentVersionId: z.string().min(1),
-  tags: z.array(sanitizedString),
+  tags: z.array(z.string()),
   createdAt: z.string().datetime({ offset: true }).or(z.string().datetime()),
   updatedAt: z.string().datetime({ offset: true }).or(z.string().datetime()),
 });
@@ -134,14 +129,14 @@ export function validateImportData(data: unknown) {
   return importDataSchema.safeParse(data);
 }
 
+// ── Sanitization ───────────────────────────────────────────────────────
+
 /**
- * Strip dangerous <script> tags from a string to prevent XSS,
- * while preserving standard XML/HTML prompt structuring tags.
+ * Strip all HTML tags from a string to prevent XSS.
+ *
+ * @example
+ * sanitizeHtml('<script>alert("xss")</script>Hello') → 'alert("xss")Hello'
  */
 export function sanitizeHtml(str: string): string {
-  if (!str) return '';
-  // Specifically target script injection vectors
-  return str
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/on\w+\s*=\s*(['"])[^\1]*?\1/gi, ''); // remove event handlers like onload=...
+  return str.replace(/<[^>]*>/g, '');
 }

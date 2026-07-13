@@ -6,7 +6,6 @@
  */
 
 import { GEMINI_BASE_URL } from '@/lib/constants';
-import { ModelRegistry } from '@/services/models/modelRegistry';
 
 /** Structured response from the AI service. */
 export interface AIServiceResponse {
@@ -201,7 +200,7 @@ export async function* sendPromptStreaming(
 export async function sendPrompt(
   params: PromptParams,
 ): Promise<AIServiceResponse> {
-  const isOpenRouter = ModelRegistry.isOpenRouter(params.model);
+  const isOpenRouter = params.model.includes('/');
   
   const url = isOpenRouter 
     ? 'https://openrouter.ai/api/v1/chat/completions'
@@ -234,12 +233,10 @@ export async function sendPrompt(
 
   if (!response.ok) {
     const errorBody = await response.text();
-    let message = `API request failed with status ${response.status}`;
+    let message = `API error (${response.status})`;
     try {
       const parsed = JSON.parse(errorBody);
-      message = parsed?.error?.message 
-        ? parsed.error.message.replace(params.apiKey, '***HIDDEN***') 
-        : message;
+      message = parsed?.error?.message ?? message;
     } catch {
       // ignore
     }
@@ -293,7 +290,7 @@ export async function testConnection(
       let message = `API error (${response.status})`;
       try {
         const parsed = JSON.parse(errorBody);
-        message = parsed?.error?.message ? parsed.error.message.replace(apiKey, '***HIDDEN***') : message;
+        message = parsed?.error?.message ?? message;
       } catch {
         // Use status-based message
       }
@@ -342,24 +339,43 @@ export async function optimizePrompt(
   draftSystemMessage: string,
   params: Omit<PromptParams, 'prompt' | 'systemMessage'>
 ): Promise<{ systemMessage: string; content: string }> {
-  const metaPrompt = `You are an expert AI Prompt Engineer. Your task is to analyze and deeply optimize a user's draft prompt for a Large Language Model.
+  const customSystemMessage = `You are an expert AI Prompt Engineer and Optimization Specialist. Your core competency is transforming vague, inefficient, or poorly structured user prompts into highly effective, robust, and professional-grade instructions for Large Language Models. You possess deep knowledge of prompt engineering frameworks (such as Chain-of-Thought, Few-Shot, and Role-Prompting). Your tone is analytical, precise, and helpful, and you prioritize clarity, modularity, and logical structure in all your outputs.`;
 
-Your goal is to:
-1. EXHAUSTIVELY expand the user's idea. Make the new prompt MUCH LONGER, highly specific, extremely detailed, and robust.
-2. Structure the prompt logically using Markdown (e.g., ## Context, ## Task, ## Rules, ## Output Format).
-3. Think of every possible edge case, requirement, and constraint the LLM should know about and add them to the prompt.
-4. Separate the overarching persona/behavior into the "systemMessage" and the specific task into the "content".
+  const metaPrompt = `## Task
+Your objective is to act as a real-time prompt optimizer. I will provide you with a draft prompt, and you will rewrite it into a highly detailed, structured, and professional version that maximizes the performance of an LLM.
 
-### USER'S DRAFT PROMPT
+## Optimization Process
+1. Analyze the intent: Identify the core goal, the target audience, and the desired tone of the original draft.
+2. Expand and Refine: Add necessary context, constraints, and instructions that were missing in the draft.
+3. Structure: Organize the output using clear Markdown headers (e.g., ## Role, ## Context, ## Task, ## Constraints, ## Output Format).
+4. Edge Cases: Anticipate potential ambiguities and include instructions to handle them (e.g., 'If the user provides X, do Y').
+
+## Rules
+- Always maintain the original intent while significantly improving the quality and specificity of the instructions.
+- If the user's input is too vague, ask clarifying questions before providing the final optimized prompt.
+- Ensure the final output is ready to be copied and pasted into a system prompt or a chat interface.
+- Use placeholders like [INSERT VARIABLE] where the user needs to provide specific data.
+
+## Output Format
+Provide the optimized prompt in the following structure:
+- ## Role/Persona: Define who the AI should act as.
+- ## Context: Provide background information.
+- ## Task: Clearly define the objective.
+- ## Constraints: List all rules, formatting requirements, and limitations.
+- ## Step-by-Step Instructions: Break down the process for the LLM.
+- ## Output Format: Specify exactly how the final result should look.
+
+## Interaction
+I will provide you with a draft prompt now. Please process it according to these instructions. My draft is:
 System Message:
 ${draftSystemMessage || "(None)"}
 
 Prompt Content:
 ${draftContent || "(None)"}
 
-Please respond ONLY with a valid JSON object containing exactly two string keys: "systemMessage" and "content". Do not include markdown codeblocks around the JSON.`;
+Please respond ONLY with a valid JSON object containing exactly two string keys: "systemMessage" (the optimized Persona/Role and Context) and "content" (the optimized Task, Constraints, Instructions, and Output Format). Do not include markdown codeblocks around the JSON.`;
 
-  const isOpenRouter = ModelRegistry.isOpenRouter(params.model);
+  const isOpenRouter = params.model.includes('/');
   
   const url = isOpenRouter
     ? 'https://openrouter.ai/api/v1/chat/completions'
@@ -373,7 +389,10 @@ Please respond ONLY with a valid JSON object containing exactly two string keys:
   const body = isOpenRouter
     ? {
         model: params.model,
-        messages: [{ role: 'user', content: metaPrompt }],
+        messages: [
+          { role: 'system', content: customSystemMessage },
+          { role: 'user', content: metaPrompt }
+        ],
         temperature: params.temperature ?? 0.4,
         max_tokens: params.maxTokens ?? 2048,
         top_p: params.topP ?? 0.95,
@@ -381,6 +400,7 @@ Please respond ONLY with a valid JSON object containing exactly two string keys:
       }
     : {
         contents: [{ parts: [{ text: metaPrompt }] }],
+        systemInstruction: { parts: [{ text: customSystemMessage }] },
         generationConfig: {
           temperature: params.temperature ?? 0.4,
           maxOutputTokens: params.maxTokens ?? 2048,
@@ -401,7 +421,7 @@ Please respond ONLY with a valid JSON object containing exactly two string keys:
     let message = `API error (${response.status})`;
     try {
       const parsed = JSON.parse(errorBody);
-      message = parsed?.error?.message ? parsed.error.message.replace(params.apiKey, '***HIDDEN***') : message;
+      message = parsed?.error?.message ?? message;
     } catch {
       // ignore
     }

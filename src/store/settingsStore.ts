@@ -7,8 +7,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { GEMINI_BASE_URL, STORAGE_KEYS } from '@/lib/constants';
-import { ModelRegistry } from '@/services/models/modelRegistry';
+import { GEMINI_BASE_URL, GEMINI_MODELS, STORAGE_KEYS } from '@/lib/constants';
 
 interface SettingsState {
   /** User's Gemini API key. Stored only in localStorage. */
@@ -46,7 +45,7 @@ export const useSettingsStore = create<SettingsStore>()(
       baseUrl: GEMINI_BASE_URL,
       defaultModel: 'gemini-3.5-flash',
       theme: 'system',
-      availableModels: ModelRegistry.getIds(),
+      availableModels: [...GEMINI_MODELS],
 
       // ── Actions ────────────────────────────────────────────────────────
 
