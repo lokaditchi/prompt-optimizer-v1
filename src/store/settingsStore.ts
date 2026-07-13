@@ -43,7 +43,7 @@ export const useSettingsStore = create<SettingsStore>()(
       // ── State ──────────────────────────────────────────────────────────
       apiKey: '',
       baseUrl: GEMINI_BASE_URL,
-      defaultModel: 'google/gemma-4-31b-it:free',
+      defaultModel: 'gemini-3.5-flash',
       theme: 'system',
       availableModels: [...GEMINI_MODELS],
 
