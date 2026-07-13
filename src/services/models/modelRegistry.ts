@@ -38,6 +38,22 @@ export class ModelRegistry {
     });
 
     this.register({
+      id: 'gemini-3.0-flash',
+      name: 'Gemini 3.0 Flash',
+      provider: 'google',
+      isFree: false,
+      pricing: { inputPerToken: 0.000_000_075, outputPerToken: 0.000_000_3 },
+    });
+
+    this.register({
+      id: 'gemini-3.0-flash-lite',
+      name: 'Gemini 3.0 Flash Lite',
+      provider: 'google',
+      isFree: false,
+      pricing: { inputPerToken: 0.000_000_0375, outputPerToken: 0.000_000_15 },
+    });
+
+    this.register({
       id: 'gemini-2.0-flash',
       name: 'Gemini 2.0 Flash',
       provider: 'google',
